@@ -62,6 +62,17 @@ ln -s /path/to/IDA-NO-MCP/oldpython/INP.py ~/.idapro/plugins/INP.py
 > ⚠️ **为什么必须每平台原生构建**：不能从 macOS 交叉编译出可运行的 Windows/Linux 版。
 > 二进制通过 rpath 链接到 IDA 的商业库（`libida.dylib`/`libida.dll`/`libida.so`），这些库只随对应平台的 IDA 安装包提供。SDK 的 stub 库能链接通过但运行时会崩溃（[idalib issue #24](https://github.com/idalib-rs/idalib/issues/24)）。
 
+> ⚠️ **IDA Pro 小版本与 `idalib` 适配要求**：`idalib` 底层硬编码了 IDA 内部类的虚函数表偏移，不同 IDA 大版本物理上不能混用（否则运行时会在 `idalib_check_license` 处报 `EXC_BAD_ACCESS` 崩溃）。请根据您本机的 IDA 版本确认或修改 `Cargo.toml`（详见 [idalib 官方版本对照](https://github.com/idalib-rs/idalib#ida-support-and-dependencies)）：
+>
+> | IDA Pro version | Latest compatible idalib |
+> | :--- | :--- |
+> | **v9.3sp1** | `0.9.0` |
+> | **v9.3** | `0.8.1` |
+> | **v9.2** | `0.7.2` |
+> | **v9.1** | `0.6.1` |
+> | **v9.0sp1** | `0.4.1` |
+> | **v9.0** | `0.3.0` |
+
 ```bash
 # 设置 IDADIR 指向 IDA 安装目录
 export IDADIR="/path/to/IDA Professional 9.3.app/Contents/MacOS"   # macOS
